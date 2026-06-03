@@ -4,8 +4,8 @@
 
 // ─── CONFIGURATION ──────────────────────────────────────────────────────────
 // TODO: Replace these with your actual values before deploying
-const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbySu1HmHKvSw0mkls0B15E1s7CxDUgGIkMTMgn7vedodOl9a1bHexsf7c_EX6OlB51z0Q/exec';
-const ADMIN_PASSWORD = 'worldcup2026pool'; // Change this!
+const GOOGLE_SHEETS_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const ADMIN_PASSWORD = 'worldcup2026'; // Change this!
 
 // Tournament start date
 const TOURNAMENT_START = new Date('2026-06-11T17:00:00-04:00');
@@ -182,12 +182,32 @@ function updatePickStatus(tier) {
 }
 
 // ─── REGISTRATION ────────────────────────────────────────────────────────────
-function registerStep1() {
-  const name = document.getElementById('reg-name').value.trim();
+async function registerStep1() {
+  const name  = document.getElementById('reg-name').value.trim();
   const email = document.getElementById('reg-email').value.trim();
-  if (!name) { showToast('Please enter your display name', true); return; }
+  if (!name)  { showToast('Please enter your display name', true); return; }
   if (!email || !email.includes('@')) { showToast('Please enter a valid email', true); return; }
-  state.name = name;
+
+  // Check for duplicate email in the sheet
+  if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+    try {
+      const res  = await fetch(`${GOOGLE_SHEETS_URL}?action=getEntries`);
+      const data = await res.json();
+      const already = (data.entries || []).find(e => e.email.toLowerCase() === email.toLowerCase());
+      if (already) {
+        showToast(`${email} has already entered — each email can only submit once.`, true);
+        // Also save to localStorage so the landing page updates
+        localStorage.setItem('wc2026_submitted_name', already.name);
+        localStorage.setItem('wc2026_submitted_email', already.email);
+        return;
+      }
+    } catch(e) {
+      // If the check fails, allow them through — don't block on a network error
+      console.warn('Duplicate check failed:', e);
+    }
+  }
+
+  state.name  = name;
   state.email = email;
   goTo('page-tier1');
   renderTierGrid('tier1', 'grid-tier1', 'selected-t1');
@@ -259,6 +279,10 @@ async function submitPicks() {
     tier3_1: state.picks.tier3[0].name,
   };
 
+  // Remember this person has submitted (keyed by email)
+  localStorage.setItem('wc2026_submitted_name', state.name);
+  localStorage.setItem('wc2026_submitted_email', state.email);
+
   // Show optimistic success
   showSuccess(allPicks);
 
@@ -278,22 +302,35 @@ async function submitPicks() {
 }
 
 function showSuccess(picks) {
-  const summary = document.getElementById('success-summary');
-  summary.innerHTML = picks.map(t =>
-    `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-       <span style="font-size:1.5rem">${t.flag}</span>
-       <span style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:600;">${t.name}</span>
-     </div>`
-  ).join('');
-  goTo('page-success');
+  // Store submitter's name so we can highlight their card
+  state.justSubmitted = state.name;
+  // Show welcome banner
+  const banner = document.getElementById('welcome-banner');
+  const text = document.getElementById('welcome-text');
+  text.textContent = `You're in, ${state.name}! Good luck. ⚽`;
+  banner.classList.remove('hidden');
+  // Auto-hide banner after 5 seconds
+  setTimeout(() => banner.classList.add('hidden'), 5000);
+  // Go straight to dashboard
+  goTo('page-leaderboard');
+}
+
+// ─── TAB SWITCHING ───────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => { p.classList.add('hidden'); p.classList.remove('active'); });
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  const panel = document.getElementById(`tab-${tab}`);
+  panel.classList.remove('hidden');
+  panel.classList.add('active');
 }
 
 // ─── LEADERBOARD ─────────────────────────────────────────────────────────────
 async function loadLeaderboard() {
   const wrap = document.getElementById('leaderboard-table-wrap');
+  const picksGrid = document.getElementById('picks-grid');
   const statusBar = document.getElementById('tourney-status-bar');
 
-  // Tournament status
   const now = new Date();
   if (now < TOURNAMENT_START) {
     const days = Math.ceil((TOURNAMENT_START - now) / (1000 * 60 * 60 * 24));
@@ -303,28 +340,29 @@ async function loadLeaderboard() {
   }
 
   wrap.innerHTML = '<div class="loading-msg">Fetching entries…</div>';
+  picksGrid.innerHTML = '<div class="loading-msg">Loading picks…</div>';
 
   if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-    wrap.innerHTML = `<div class="loading-msg">
-      Connect a Google Sheet to see the leaderboard.<br/>
-      <span style="font-size:0.8rem;color:var(--muted)">See setup instructions in the README.</span>
-    </div>`;
+    wrap.innerHTML = `<div class="loading-msg">Connect a Google Sheet to see the leaderboard.<br/><span style="font-size:0.8rem;color:var(--muted)">See setup instructions in the README.</span></div>`;
+    picksGrid.innerHTML = `<div class="loading-msg">Connect a Google Sheet to see picks.</div>`;
     return;
   }
 
   try {
-    const res = await fetch(`${GOOGLE_SHEETS_URL}?action=getEntries`);
-    const data = await res.json();
-    state.entries = data.entries || [];
-
-    // Load results too
-    const resR = await fetch(`${GOOGLE_SHEETS_URL}?action=getResults`);
+    const [resE, resR] = await Promise.all([
+      fetch(`${GOOGLE_SHEETS_URL}?action=getEntries`),
+      fetch(`${GOOGLE_SHEETS_URL}?action=getResults`)
+    ]);
+    const dataE = await resE.json();
     const dataR = await resR.json();
+    state.entries = dataE.entries || [];
     state.results = dataR.results || [];
 
     renderLeaderboard(wrap);
+    renderPicks(picksGrid);
   } catch (e) {
     wrap.innerHTML = `<div class="loading-msg">Could not load data. Check your connection.</div>`;
+    picksGrid.innerHTML = `<div class="loading-msg">Could not load picks.</div>`;
   }
 }
 
@@ -359,7 +397,25 @@ function renderLeaderboard(wrap) {
     return;
   }
 
-  // Compute scores
+  const now = new Date();
+  const tournamentLive = now >= TOURNAMENT_START;
+
+  if (!tournamentLive) {
+    // Pre-tournament: just show who's entered, alphabetically
+    const sorted = [...state.entries].sort((a, b) => a.name.localeCompare(b.name));
+    wrap.innerHTML = `
+      <p class="pre-tourney-note">Scoring begins June 11. ${sorted.length} participant${sorted.length !== 1 ? 's' : ''} entered so far:</p>
+      <div class="pre-tourney-list">
+        ${sorted.map(e => `
+          <div class="pre-tourney-row">
+            <span class="pre-tourney-name">${escapeHtml(e.name)}</span>
+            <span class="pre-tourney-check">✓ Picks locked</span>
+          </div>`).join('')}
+      </div>`;
+    return;
+  }
+
+  // Tournament live: full scored leaderboard
   const scored = state.entries.map(e => {
     const teams = [e.tier1_1, e.tier1_2, e.tier1_3, e.tier2_1, e.tier2_2, e.tier3_1].filter(Boolean);
     return { ...e, teams, score: calcScore(teams) };
@@ -370,12 +426,7 @@ function renderLeaderboard(wrap) {
   wrap.innerHTML = `
     <table class="lb-table">
       <thead>
-        <tr>
-          <th>#</th>
-          <th>NAME</th>
-          <th>TEAMS</th>
-          <th style="text-align:right">PTS</th>
-        </tr>
+        <tr><th>#</th><th>NAME</th><th>TEAMS</th><th style="text-align:right">PTS</th></tr>
       </thead>
       <tbody>
         ${scored.map((e, i) => `
@@ -390,15 +441,49 @@ function renderLeaderboard(wrap) {
                 }).join('')}
               </div>
             </td>
-            <td>
-              <div class="lb-score">${e.score}</div>
-              <div class="lb-score-label">POINTS</div>
-            </td>
-          </tr>
-        `).join('')}
+            <td><div class="lb-score">${e.score}</div><div class="lb-score-label">POINTS</div></td>
+          </tr>`).join('')}
       </tbody>
-    </table>
-  `;
+    </table>`;
+}
+
+// ─── PICKS GRID ───────────────────────────────────────────────────────────────
+function renderPicks(container) {
+  if (state.entries.length === 0) {
+    container.innerHTML = '<div class="loading-msg">No entries yet.</div>';
+    return;
+  }
+
+  const sorted = [...state.entries].sort((a, b) => a.name.localeCompare(b.name));
+
+  container.innerHTML = `<div class="picks-grid">
+    ${sorted.map(e => {
+      const isMe = state.justSubmitted && e.name === state.justSubmitted;
+      const tierGroups = [
+        { label: 'TIER 1', cls: 't1', teams: [e.tier1_1, e.tier1_2, e.tier1_3].filter(Boolean) },
+        { label: 'TIER 2', cls: 't2', teams: [e.tier2_1, e.tier2_2].filter(Boolean) },
+        { label: 'TIER 3', cls: 't3', teams: [e.tier3_1].filter(Boolean) },
+      ];
+      return `
+        <div class="picks-card ${isMe ? 'picks-card-me' : ''}">
+          <div class="picks-card-name">
+            ${isMe ? '<span class="picks-you-badge">YOU</span>' : ''}
+            ${escapeHtml(e.name)}
+          </div>
+          ${tierGroups.map(g => `
+            <div class="picks-tier-group ${g.cls}">
+              <div class="picks-tier-label">${g.label}</div>
+              ${g.teams.map(t => {
+                const teamObj = ALL_TEAMS.find(x => x.name === t);
+                return `<div class="picks-team-row">
+                  <span>${teamObj ? teamObj.flag : ''}</span>
+                  <span>${escapeHtml(t)}</span>
+                </div>`;
+              }).join('')}
+            </div>`).join('')}
+        </div>`;
+    }).join('')}
+  </div>`;
 }
 
 // ─── ADMIN ───────────────────────────────────────────────────────────────────
@@ -506,9 +591,13 @@ function showToast(msg, isError = false) {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  // Check tournament status for landing page CTA
-  const now = new Date();
-  if (now >= TOURNAMENT_START) {
-    document.querySelector('.btn-ghost')?.textContent !== undefined;
+  const submittedName  = localStorage.getItem('wc2026_submitted_name');
+  const submittedEmail = localStorage.getItem('wc2026_submitted_email');
+  if (submittedName && submittedEmail) {
+    const actionsEl = document.getElementById('landing-actions');
+    actionsEl.innerHTML = `
+      <p class="already-entered-note">Welcome back, <strong>${escapeHtml(submittedName)}</strong> — your picks are locked in.</p>
+      <button class="btn-primary" onclick="goTo('page-leaderboard')">VIEW THE POOL →</button>
+    `;
   }
 });
