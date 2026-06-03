@@ -400,11 +400,7 @@ function renderLeaderboard(wrap) {
   const now = new Date();
   const tournamentLive = now >= TOURNAMENT_START;
 
-  if (!tournamentLive) {
-    // Pre-tournament: just show who's entered, alphabetically
-    const sorted = [...state.entries].sort((a, b) => a.name.localeCompare(b.name));
-    wrap.innerHTML = `
-      <p class="pre-tourney-note">Scoring begins June 11. ${sorted.length} participant${sorted.length !== 1 ? 's' : ''} entered so far:</p>
+  <p class="pre-tourney-note">${sorted.length} participant${sorted.length !== 1 ? 's' : ''} entered so far:</p>
       <div class="pre-tourney-list">
         ${sorted.map(e => `
           <div class="pre-tourney-row">
