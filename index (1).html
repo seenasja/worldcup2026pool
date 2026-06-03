@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>World Cup 2026 Pool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ LANDING PAGE ═══ -->
+<div id="page-landing" class="page active">
+  <div class="landing-bg">
+    <div class="stadium-lights"></div>
+    <div class="pitch-lines"></div>
+  </div>
+  <div class="landing-content">
+    <div class="trophy-icon">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Coppa_mondiale.svg/120px-Coppa_mondiale.svg.png" alt="FIFA World Cup Trophy" class="trophy-img"/>
+</div>
+    <div class="tournament-label">FIFA WORLD CUP 2026</div>
+    <h1 class="landing-title">THE POOL</h1>
+    <p class="landing-sub">USA · CANADA · MEXICO &nbsp;|&nbsp; JUNE 11 – JULY 19</p>
+    <div class="rules-card">
+      <h3>HOW IT WORKS</h3>
+      <div class="rules-grid">
+        <div class="rule-item">
+          <span class="rule-num">01</span>
+          <div>
+            <strong>Pick 6 Teams</strong>
+            <p>Choose 3 teams from Tier 1, 2 from Tier 2, and 1 from Tier 3 — ranked by FIFA world ranking</p>
+          </div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">02</span>
+          <div>
+            <strong>Earn Points Every Match</strong>
+            <p>Your teams score points for every win, draw, or penalty shootout result throughout the tournament</p>
+          </div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">03</span>
+          <div>
+            <strong>Watch the Leaderboard</strong>
+            <p>Track your standing live from June 11 as the tournament unfolds</p>
+          </div>
+        </div>
+      </div>
+      <div class="scoring-table-wrap">
+        <h4>POINT SYSTEM</h4>
+        <table class="scoring-table">
+          <thead>
+            <tr><th>Round</th><th>Win</th><th>Draw</th><th>Win (Pens)</th><th>Loss (Pens)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Group Stage</td><td>3</td><td>1</td><td>—</td><td>—</td></tr>
+            <tr><td>Round of 32</td><td>4</td><td>—</td><td>3</td><td>1</td></tr>
+            <tr><td>Round of 16</td><td>5</td><td>—</td><td>4</td><td>2</td></tr>
+            <tr><td>Quarterfinals</td><td>6</td><td>—</td><td>5</td><td>3</td></tr>
+            <tr><td>Semifinals</td><td>7</td><td>—</td><td>6</td><td>4</td></tr>
+            <tr><td>Final</td><td>8</td><td>—</td><td>7</td><td>5</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="goTo('page-register')">GET STARTED →</button>
+    <button class="btn-ghost" onclick="goTo('page-leaderboard')">VIEW LEADERBOARD</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ REGISTRATION ═══ -->
+<div id="page-register" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goTo('page-landing')">← BACK</button>
+    <div class="step-indicator">
+      <span class="step active" data-step="1">1</span>
+      <span class="step-line"></span>
+      <span class="step" data-step="2">2</span>
+      <span class="step-line"></span>
+      <span class="step" data-step="3">3</span>
+      <span class="step-line"></span>
+      <span class="step" data-step="4">4</span>
+    </div>
+    <div style="width:60px"></div>
+  </div>
+  <div class="form-container">
+    <div class="form-header">
+      <span class="form-label">STEP 1 OF 4</span>
+      <h2>YOUR INFO</h2>
+    </div>
+    <div class="form-body">
+      <div class="field-group">
+        <label>DISPLAY NAME *</label>
+        <input type="text" id="reg-name" placeholder="How you'll appear on the leaderboard" maxlength="30"/>
+      </div>
+      <div class="field-group">
+        <label>EMAIL *</label>
+        <input type="email" id="reg-email" placeholder="For updates and results"/>
+      </div>
+      <p class="form-note">Your name and picks will be visible to all pool participants on the leaderboard.</p>
+    </div>
+    <button class="btn-primary full" onclick="registerStep1()">CONTINUE TO TIER 1 →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ TIER 1 PICK ═══ -->
+<div id="page-tier1" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goTo('page-register')">← BACK</button>
+    <div class="step-indicator">
+      <span class="step done" data-step="1">✓</span>
+      <span class="step-line filled"></span>
+      <span class="step active" data-step="2">2</span>
+      <span class="step-line"></span>
+      <span class="step" data-step="3">3</span>
+      <span class="step-line"></span>
+      <span class="step" data-step="4">4</span>
+    </div>
+    <div style="width:60px"></div>
+  </div>
+  <div class="tier-container">
+    <div class="tier-header tier1-header">
+      <div class="tier-badge">TIER 1</div>
+      <h2>THE FAVORITES</h2>
+      <p>FIFA Rankings #1–16 · Choose <strong>3 teams</strong></p>
+    </div>
+    <div class="teams-grid" id="grid-tier1"></div>
+    <div class="pick-status" id="status-tier1">Select 2 teams</div>
+    <button class="btn-primary full" id="btn-tier1" onclick="goTier2()" disabled>CONTINUE TO TIER 2 →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ TIER 2 PICK ═══ -->
+<div id="page-tier2" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goTo('page-tier1')">← BACK</button>
+    <div class="step-indicator">
+      <span class="step done" data-step="1">✓</span>
+      <span class="step-line filled"></span>
+      <span class="step done" data-step="2">✓</span>
+      <span class="step-line filled"></span>
+      <span class="step active" data-step="3">3</span>
+      <span class="step-line"></span>
+      <span class="step" data-step="4">4</span>
+    </div>
+    <div style="width:60px"></div>
+  </div>
+  <div class="tier-container">
+    <div class="tier-header tier2-header">
+      <div class="tier-badge">TIER 2</div>
+      <h2>THE CONTENDERS</h2>
+      <p>FIFA Rankings #17–32 · Choose <strong>2 teams</strong></p>
+    </div>
+    <div class="teams-grid" id="grid-tier2"></div>
+    <div class="pick-status" id="status-tier2">Select 2 teams</div>
+    <button class="btn-primary full" id="btn-tier2" onclick="goTier3()" disabled>CONTINUE TO TIER 3 →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ TIER 3 PICK ═══ -->
+<div id="page-tier3" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goTo('page-tier2')">← BACK</button>
+    <div class="step-indicator">
+      <span class="step done" data-step="1">✓</span>
+      <span class="step-line filled"></span>
+      <span class="step done" data-step="2">✓</span>
+      <span class="step-line filled"></span>
+      <span class="step done" data-step="3">✓</span>
+      <span class="step-line filled"></span>
+      <span class="step active" data-step="4">4</span>
+    </div>
+    <div style="width:60px"></div>
+  </div>
+  <div class="tier-container">
+    <div class="tier-header tier3-header">
+      <div class="tier-badge">TIER 3</div>
+      <h2>THE UNDERDOGS</h2>
+      <p>FIFA Rankings #33–48 · Choose <strong>1 team</strong></p>
+    </div>
+    <div class="teams-grid" id="grid-tier3"></div>
+    <div class="pick-status" id="status-tier3">Select 2 teams</div>
+    <button class="btn-primary full" id="btn-tier3" onclick="showConfirm()" disabled>REVIEW MY PICKS →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ CONFIRM ═══ -->
+<div id="page-confirm" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goTo('page-tier3')">← BACK</button>
+    <div class="confirm-title-area"><h2>CONFIRM YOUR PICKS</h2></div>
+    <div style="width:60px"></div>
+  </div>
+  <div class="confirm-container">
+    <div class="confirm-name-badge" id="confirm-name-badge"></div>
+    <div class="confirm-picks" id="confirm-picks-display"></div>
+    <p class="confirm-note">Once submitted, picks are locked until kickoff on June 11. Good luck!</p>
+    <button class="btn-primary full" onclick="submitPicks()">SUBMIT MY PICKS →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SUCCESS ═══ -->
+<div id="page-success" class="page">
+  <div class="success-container">
+    <div class="success-icon">⚽</div>
+    <h2>YOU'RE IN!</h2>
+    <p>Your picks have been saved. Check the leaderboard starting June 11 when the tournament kicks off.</p>
+    <div id="success-summary"></div>
+    <div class="success-actions">
+      <button class="btn-primary" onclick="goTo('page-leaderboard')">VIEW LEADERBOARD</button>
+      <button class="btn-ghost" onclick="goTo('page-landing')">BACK TO HOME</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ LEADERBOARD ═══ -->
+<div id="page-leaderboard" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goTo('page-landing')">← BACK</button>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gold);letter-spacing:2px;">LEADERBOARD</h2>
+    <button class="admin-link" onclick="goTo('page-admin')">ADMIN</button>
+  </div>
+  <div class="leaderboard-container">
+    <div class="tourney-status" id="tourney-status-bar"></div>
+    <div id="leaderboard-table-wrap">
+      <div class="loading-msg">Loading entries…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ ADMIN ═══ -->
+<div id="page-admin" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goTo('page-leaderboard')">← BACK</button>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gold);">ADMIN PANEL</h2>
+    <div style="width:60px"></div>
+  </div>
+  <div class="admin-container">
+    <div class="admin-lock" id="admin-lock">
+      <h3>ADMIN ACCESS</h3>
+      <input type="password" id="admin-pw" placeholder="Enter admin password"/>
+      <button class="btn-primary" onclick="unlockAdmin()">UNLOCK</button>
+      <p class="form-note">Contact the pool organizer for the admin password.</p>
+    </div>
+    <div class="admin-panel hidden" id="admin-panel">
+      <h3>ENTER MATCH RESULT</h3>
+      <div class="admin-form">
+        <div class="field-group">
+          <label>ROUND</label>
+          <select id="a-round">
+            <option value="group">Group Stage</option>
+            <option value="r32">Round of 32</option>
+            <option value="r16">Round of 16</option>
+            <option value="qf">Quarterfinals</option>
+            <option value="sf">Semifinals</option>
+            <option value="final">Final</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>TEAM 1</label>
+          <select id="a-team1"></select>
+        </div>
+        <div class="field-group">
+          <label>TEAM 2</label>
+          <select id="a-team2"></select>
+        </div>
+        <div class="field-group">
+          <label>RESULT</label>
+          <select id="a-result">
+            <option value="team1_win">Team 1 Wins</option>
+            <option value="draw">Draw (Group Stage)</option>
+            <option value="team2_win">Team 2 Wins</option>
+            <option value="team1_pens">Team 1 Wins on Penalties</option>
+            <option value="team2_pens">Team 2 Wins on Penalties</option>
+          </select>
+        </div>
+        <button class="btn-primary full" onclick="submitResult()">LOG RESULT</button>
+      </div>
+      <div class="admin-results-list">
+        <h3>LOGGED RESULTS</h3>
+        <div id="results-log"></div>
+        <button class="btn-ghost small" onclick="clearResults()">CLEAR ALL RESULTS</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
