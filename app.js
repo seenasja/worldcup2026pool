@@ -314,19 +314,34 @@ async function submitPicks() {
 }
 
 function showSuccess(picks) {
-  // Store submitter's name so we can highlight their card
   state.justSubmitted = state.name;
-  // Show welcome banner
   const banner = document.getElementById('welcome-banner');
   const text = document.getElementById('welcome-text');
   text.textContent = `You're in, ${state.name}! Good luck. ⚽`;
   banner.classList.remove('hidden');
-  // Auto-hide banner after 5 seconds
   setTimeout(() => banner.classList.add('hidden'), 5000);
-  // Reveal picks tab now that they've submitted
   document.getElementById('tab-btn-picks').style.display = '';
-  // Go straight to dashboard
   goTo('page-leaderboard');
+  // Wait for sheet fetch to complete, then inject entry if missing
+  setTimeout(() => {
+    const alreadyIn = state.entries.find(e => e.email === state.email);
+    if (!alreadyIn) {
+      state.entries.push({
+        name: state.name,
+        email: state.email,
+        tier1_1: state.picks.tier1[0].name,
+        tier1_2: state.picks.tier1[1].name,
+        tier1_3: state.picks.tier1[2].name,
+        tier2_1: state.picks.tier2[0].name,
+        tier2_2: state.picks.tier2[1].name,
+        tier3_1: state.picks.tier3[0].name,
+      });
+      const wrap = document.getElementById('leaderboard-table-wrap');
+      const picksGrid = document.getElementById('picks-grid');
+      renderLeaderboard(wrap);
+      renderPicks(picksGrid);
+    }
+  }, 2000);
 }
 
 // ─── TAB SWITCHING ───────────────────────────────────────────────────────────
