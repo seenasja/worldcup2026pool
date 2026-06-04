@@ -4,8 +4,8 @@
 
 // ─── CONFIGURATION ──────────────────────────────────────────────────────────
 // TODO: Replace these with your actual values before deploying
-const GOOGLE_SHEETS_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
-const ADMIN_PASSWORD = 'worldcup2026'; // Change this!
+const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyN7fZU-Y4lTQzFnS0ytPUwRpNp27YB6CyMgyRqF5js0XwfPa46p70rEVq_4FdWDK62GA/exec';
+const ADMIN_PASSWORD = 'worldcup2026pool'; // Change this!
 
 // Tournament start date
 const TOURNAMENT_START = new Date('2026-06-11T17:00:00-04:00');
