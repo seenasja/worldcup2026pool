@@ -65,6 +65,11 @@
     </div>
     <div id="landing-actions">
       <button class="btn-primary" id="btn-get-started" onclick="goTo('page-register')">GET STARTED →</button>
+<script>
+  if (new Date() >= new Date('2026-06-11T15:00:00-04:00')) {
+    document.getElementById('btn-get-started').style.display = 'none';
+  }
+</script>
       <button class="btn-ghost" onclick="goTo('page-leaderboard')">VIEW LEADERBOARD</button>
     </div>
   </div>
