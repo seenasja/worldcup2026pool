@@ -62,7 +62,7 @@ const TEAMS = {
     { flag: '🇿🇦', name: 'South Africa',  rank: 60 },
     { flag: '🇮🇶', name: 'Iraq',          rank: 62 },
     { flag: '🇬🇭', name: 'Ghana',         rank: 64 },
-    { flag: '🇲🇱', name: 'Mali',          rank: 66 },
+    { flag: '🇭🇹', name: 'Haiti', rank: 73 },
     { flag: '🇺🇿', name: 'Uzbekistan',    rank: 70 },
     { flag: '🇯🇴', name: 'Jordan',        rank: 75 },
     { flag: '🇵🇾', name: 'Paraguay',      rank: 78 },
