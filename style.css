@@ -1132,3 +1132,103 @@ body {
   display: flex;
   align-items: center;
 }
+/* ── EXPANDABLE LEADERBOARD ROWS ───────────────── */
+.lb-row-clickable {
+  cursor: pointer;
+}
+.lb-row-clickable:hover {
+  background: rgba(245,197,24,0.04);
+}
+
+.lb-expand-arrow {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.lb-detail-row td {
+  padding: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.entry-detail-wrap {
+  padding: 16px;
+  background: rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.detail-team-block {
+  background: var(--navy3);
+  border-radius: 8px;
+  padding: 12px 14px;
+  border-left: 2px solid rgba(245,197,24,0.3);
+}
+
+.detail-team-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.detail-match-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  padding: 4px 0;
+}
+
+.detail-result-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  width: 70px;
+  text-align: center;
+}
+.detail-result-tag.won { background: rgba(34,197,94,0.15); color: var(--green); }
+.detail-result-tag.drew { background: rgba(245,197,24,0.15); color: var(--gold); }
+.detail-result-tag.lost { background: rgba(239,68,68,0.15); color: var(--red); }
+
+.detail-score {
+  margin-left: auto;
+  font-family: 'Barlow Condensed', sans-serif;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.detail-next-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--white);
+  padding: 6px 0 2px;
+  margin-top: 4px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.detail-next-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--gold);
+  width: 70px;
+  flex-shrink: 0;
+}
+
+.detail-next-date {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
