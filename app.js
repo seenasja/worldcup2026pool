@@ -461,9 +461,9 @@ function renderLeaderboard(wrap) {
       </thead>
       <tbody>
         ${scored.map((e, i) => `
-          <tr>
+          <tr class="lb-row-clickable" onclick="toggleLbDetail(${i})">
             <td class="lb-rank ${rankClasses[i] || ''}">${i + 1}</td>
-            <td><div class="lb-name">${escapeHtml(e.name)}</div></td>
+            <td><div class="lb-name">${escapeHtml(e.name)} <span class="lb-expand-arrow" id="lb-arrow-${i}">▾</span></div></td>
             <td>
               <div class="lb-teams">
                 ${e.teams.map(t => {
@@ -474,9 +474,78 @@ function renderLeaderboard(wrap) {
             </td>
             <td><div class="lb-score">${e.score}</div><div class="lb-score-label">POINTS</div></td>
             <td><div class="lb-score" style="font-size:1.3rem">${e.gd > 0 ? '+' : ''}${e.gd}</div><div class="lb-score-label">GD</div></td>
+          </tr>
+          <tr class="lb-detail-row hidden" id="lb-detail-${i}">
+            <td colspan="5">${renderEntryDetail(e)}</td>
           </tr>`).join('')}
       </tbody>
     </table>`;
+}
+
+function toggleLbDetail(i) {
+  const row = document.getElementById(`lb-detail-${i}`);
+  const arrow = document.getElementById(`lb-arrow-${i}`);
+  const isHidden = row.classList.contains('hidden');
+  row.classList.toggle('hidden');
+  arrow.textContent = isHidden ? '▴' : '▾';
+}
+
+function renderEntryDetail(entry) {
+  const teamRows = entry.teams.map(teamName => {
+    const teamObj = ALL_TEAMS.find(x => x.name === teamName);
+    const flag = teamObj ? teamObj.flag : '';
+
+    const played = state.results.filter(r => r.team1 === teamName || r.team2 === teamName);
+    let nextMatch = null;
+    for (const phase of SCHEDULE) {
+      for (const day of phase.days) {
+        for (const m of day.matches) {
+          if (m.home !== teamName && m.away !== teamName) continue;
+          const alreadyLogged = state.results.find(r =>
+            (r.team1 === m.home && r.team2 === m.away) || (r.team1 === m.away && r.team2 === m.home)
+          );
+          if (!alreadyLogged) { nextMatch = { ...m, date: day.date }; break; }
+        }
+        if (nextMatch) break;
+      }
+      if (nextMatch) break;
+    }
+
+    const playedHtml = played.map(r => {
+      const oppName = r.team1 === teamName ? r.team2 : r.team1;
+      const oppObj = ALL_TEAMS.find(x => x.name === oppName);
+      const isTeam1 = r.team1 === teamName;
+      const s1 = r.score1 ?? 0, s2 = r.score2 ?? 0;
+      const myScore = isTeam1 ? s1 : s2;
+      const oppScore = isTeam1 ? s2 : s1;
+      let resultLabel = '';
+      if (r.outcome === 'draw') resultLabel = 'Draw';
+      else if ((r.outcome === 'team1_win' && isTeam1) || (r.outcome === 'team2_win' && !isTeam1)) resultLabel = 'Won';
+      else if ((r.outcome === 'team1_pens' && isTeam1) || (r.outcome === 'team2_pens' && !isTeam1)) resultLabel = 'Won (pens)';
+      else if ((r.outcome === 'team1_pens' && !isTeam1) || (r.outcome === 'team2_pens' && isTeam1)) resultLabel = 'Lost (pens)';
+      else resultLabel = 'Lost';
+      return `<div class="detail-match-row">
+        <span class="detail-result-tag ${resultLabel.includes('Won') ? 'won' : resultLabel === 'Draw' ? 'drew' : 'lost'}">${resultLabel}</span>
+        <span>vs ${oppObj ? oppObj.flag : ''} ${escapeHtml(oppName)}</span>
+        <span class="detail-score">${myScore}–${oppScore}</span>
+      </div>`;
+    }).join('');
+
+    const nextHtml = nextMatch ? `
+      <div class="detail-next-row">
+        <span class="detail-next-label">NEXT</span>
+        <span>vs ${nextMatch.home === teamName ? (ALL_TEAMS.find(x=>x.name===nextMatch.away)?.flag||'') + ' ' + nextMatch.away : (ALL_TEAMS.find(x=>x.name===nextMatch.home)?.flag||'') + ' ' + nextMatch.home}</span>
+        <span class="detail-next-date">${nextMatch.date}, ${nextMatch.time} ET</span>
+      </div>` : `<div class="detail-next-row"><span class="detail-next-label" style="color:var(--muted)">No more scheduled matches</span></div>`;
+
+    return `<div class="detail-team-block">
+      <div class="detail-team-name">${flag} ${escapeHtml(teamName)}</div>
+      ${playedHtml || '<div class="detail-match-row" style="color:var(--muted)">No matches played yet</div>'}
+      ${nextHtml}
+    </div>`;
+  }).join('');
+
+  return `<div class="entry-detail-wrap">${teamRows}</div>`;
 }
 
 // ─── PICKS GRID ───────────────────────────────────────────────────────────────
