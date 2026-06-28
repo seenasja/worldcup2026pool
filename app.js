@@ -749,8 +749,33 @@ const SCHEDULE = [
     ]},
   ]},
   { phase: 'ROUND OF 32', days: [
-    { date: 'Sunday, June 28 – Friday, July 3', matches: [
-      { time: 'Various', home: 'TBD', away: 'TBD', venue: 'Multiple venues' },
+    { date: 'Sunday, June 28', matches: [
+      { time: '3:00 PM', home: 'Canada', away: 'South Africa', venue: 'Los Angeles' },
+    ]},
+    { date: 'Monday, June 29', matches: [
+      { time: '1:00 PM', home: 'Brazil', away: 'Japan', venue: 'Houston' },
+      { time: '4:30 PM', home: 'Germany', away: 'Paraguay', venue: 'Boston' },
+      { time: '9:00 PM', home: 'Netherlands', away: 'Morocco', venue: 'Monterrey' },
+    ]},
+    { date: 'Tuesday, June 30', matches: [
+      { time: '1:00 PM', home: 'Ivory Coast', away: 'Norway', venue: 'Dallas' },
+      { time: '5:00 PM', home: 'France', away: 'Sweden', venue: 'New York / New Jersey' },
+      { time: '9:00 PM', home: 'Mexico', away: 'Ecuador', venue: 'Mexico City' },
+    ]},
+    { date: 'Wednesday, July 1', matches: [
+      { time: '12:00 PM', home: 'England', away: 'DR Congo', venue: 'Atlanta' },
+      { time: '4:00 PM', home: 'Belgium', away: 'Senegal', venue: 'Seattle' },
+      { time: '8:00 PM', home: 'USA', away: 'Bosnia & Herz.', venue: 'San Francisco' },
+    ]},
+    { date: 'Thursday, July 2', matches: [
+      { time: '3:00 PM', home: 'Spain', away: 'Austria', venue: 'Los Angeles' },
+      { time: '7:00 PM', home: 'Portugal', away: 'Croatia', venue: 'Toronto' },
+      { time: '11:00 PM', home: 'Switzerland', away: 'Algeria', venue: 'Vancouver' },
+    ]},
+    { date: 'Friday, July 3', matches: [
+      { time: '2:00 PM', home: 'Egypt', away: 'Australia', venue: 'Dallas' },
+      { time: '6:00 PM', home: 'Argentina', away: 'Cape Verde', venue: 'Miami' },
+      { time: '9:30 PM', home: 'Colombia', away: 'Ghana', venue: 'Kansas City' },
     ]},
   ]},
   { phase: 'ROUND OF 16', days: [
