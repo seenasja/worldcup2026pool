@@ -784,11 +784,15 @@ const SCHEDULE = [
     ]},
   ]},
   { phase: 'QUARTERFINALS', days: [
-    { date: 'Thursday, July 9', matches: [{ time: '4:00 PM', home: 'TBD', away: 'TBD', venue: 'Boston' }]},
-    { date: 'Friday, July 10', matches: [{ time: '3:00 PM', home: 'TBD', away: 'TBD', venue: 'Los Angeles' }]},
+    { date: 'Thursday, July 9', matches: [
+      { time: '4:00 PM', home: 'France', away: 'Morocco', venue: 'Boston' },
+    ]},
+    { date: 'Friday, July 10', matches: [
+      { time: '3:00 PM', home: 'Belgium', away: 'Spain', venue: 'Los Angeles' },
+    ]},
     { date: 'Saturday, July 11', matches: [
-      { time: '5:00 PM', home: 'TBD', away: 'TBD', venue: 'Miami' },
-      { time: '9:00 PM', home: 'TBD', away: 'TBD', venue: 'Kansas City' },
+      { time: '5:00 PM', home: 'Norway', away: 'England', venue: 'Miami' },
+      { time: '9:00 PM', home: 'Argentina', away: 'Switzerland', venue: 'Kansas City' },
     ]},
   ]},
   { phase: 'SEMIFINALS', days: [
