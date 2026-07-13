@@ -796,8 +796,8 @@ const SCHEDULE = [
     ]},
   ]},
   { phase: 'SEMIFINALS', days: [
-    { date: 'Tuesday, July 14', matches: [{ time: '3:00 PM', home: 'TBD', away: 'TBD', venue: 'Dallas' }]},
-    { date: 'Wednesday, July 15', matches: [{ time: '3:00 PM', home: 'TBD', away: 'TBD', venue: 'Atlanta' }]},
+    { date: 'Tuesday, July 14', matches: [{ time: '3:00 PM', home: 'France', away: 'Spain', venue: 'Dallas' }]},
+    { date: 'Wednesday, July 15', matches: [{ time: '3:00 PM', home: 'England', away: 'Argentina', venue: 'Atlanta' }]},
   ]},
   { phase: 'THIRD PLACE', days: [
     { date: 'Saturday, July 18', matches: [{ time: '5:00 PM', home: 'TBD', away: 'TBD', venue: 'Miami' }]},
